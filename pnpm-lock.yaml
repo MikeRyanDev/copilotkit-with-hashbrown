@@ -11,6 +11,9 @@ importers:
       '@ag-ui/client':
         specifier: ^0.0.47
         version: 0.0.47
+      '@ag-ui/core':
+        specifier: ^0.0.47
+        version: 0.0.47
       '@copilotkit/react-core':
         specifier: 1.51.0
         version: 1.51.0(@ag-ui/client@0.0.47)(@copilotkit/runtime-client-gql@1.54.0(@ag-ui/core@0.0.47)(graphql@16.13.1)(react@19.2.4))(@copilotkit/shared@1.54.0(@ag-ui/core@0.0.47))(@copilotkitnext/core@1.54.0(zod@4.3.6))(@copilotkitnext/react@1.54.0(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(micromark-util-types@2.0.2)(micromark@4.0.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(signal-polyfill@0.2.2))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.3.6)
@@ -44,6 +47,9 @@ importers:
       streamdown:
         specifier: ^2.1.0
         version: 2.3.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
