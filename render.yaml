@@ -29,7 +29,7 @@ services:
     branch: main
     repo: https://github.com/mikeryandev/copilotkit-with-hashbrown
     rootDir: agent
-    buildCommand: pip install uv && uv sync --frozen --python 3.12
+    buildCommand: uv sync --frozen
     startCommand: uv run langgraph dev --host 0.0.0.0 --port $PORT --no-browser --no-reload
     envVars:
       - key: OPENAI_API_KEY
