@@ -61,14 +61,14 @@ function getToolStatusText(message: RenderMessageProps["message"]): string {
   const payload = toObject(message.content);
   const location = getLocation(payload);
 
-  if (toolName?.toLowerCase().includes("weather")) {
-    return location ? `Checking weather for ${location}` : "Checking weather";
+  if (toolName?.toLowerCase().includes("search")) {
+    return "Searching fast-food dataset";
   }
   if (toolName) {
     return `Running ${humanizeToolName(toolName)}`;
   }
   if (location) {
-    return `Checking weather for ${location}`;
+    return `Working on ${location}`;
   }
   return "Running tool";
 }
@@ -79,12 +79,7 @@ const AssistantMessageRenderer = memo(function AssistantMessageRenderer({
   message: AssistantMessage;
 }) {
   const kit = useChatKit();
-  const { value, parserState } = useJsonParser(
-    message.content ?? "",
-    kit.schema,
-  );
-
-  if (parserState.isComplete) console.log(message.content);
+  const { value } = useJsonParser(message.content ?? "", kit.schema);
 
   if (!value) return null;
 

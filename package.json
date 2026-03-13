@@ -16,11 +16,12 @@
   "dependencies": {
     "@ag-ui/client": "^0.0.47",
     "@ag-ui/core": "^0.0.47",
-    "@copilotkit/react-core": "1.51.0",
-    "@copilotkit/react-ui": "1.51.0",
-    "@copilotkit/runtime": "1.51.0",
+    "@copilotkit/react-core": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/react-core@3432",
+    "@copilotkit/react-ui": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/react-ui@3432",
+    "@copilotkit/runtime": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/runtime@3432",
     "@hashbrownai/core": "0.5.0-beta.4",
     "@hashbrownai/react": "0.5.0-beta.4",
+    "chart.js": "^4.5.1",
     "figma-squircle": "^1.1.0",
     "next": "16.1.1",
     "react": "^19.2.3",
@@ -41,5 +42,16 @@
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@copilotkit/react-core": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/react-core@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkit/runtime-client-gql": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/runtime-client-gql@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkit/shared": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/shared@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkitnext/agent": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkitnext/agent@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkitnext/core": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkitnext/core@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkitnext/react": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkitnext/react@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
+      "@copilotkitnext/runtime": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkitnext/runtime@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893"
+    }
   }
 }

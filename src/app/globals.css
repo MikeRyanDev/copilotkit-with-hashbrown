@@ -213,6 +213,41 @@ samp {
   line-height: 1.8rem;
 }
 
+.article-markdown {
+  width: 100%;
+  max-width: 720px;
+  color: var(--gray);
+}
+
+.article-markdown a {
+  color: var(--sunshine-yellow-dark);
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 162, 61, 0.35);
+  text-underline-offset: 0.18em;
+}
+
+.article-markdown p {
+  margin: 0 0 12px;
+  line-height: 1.72;
+}
+
+.article-markdown ol,
+.article-markdown ul {
+  margin: 0 0 12px;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.article-markdown li {
+  line-height: 1.42;
+}
+
+.article-markdown strong {
+  font-weight: 600;
+}
+
 .magic-text-output h1 {
   font-size: clamp(1.6rem, 2.2vw, 2.1rem);
   line-height: 1.5;

@@ -5,8 +5,8 @@ import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
 
 export const metadata: Metadata = {
-  title: "Hashbrown with CopilotKit",
-  description: "Light theme demo with squircle UI surfaces",
+  title: "Hashbrown Fast-Food Lab",
+  description: "Advanced Hashbrown + CopilotKit fast-food article demo",
   icons: {
     icon: "/hashbrown.svg",
     shortcut: "/hashbrown.svg",
@@ -41,7 +41,7 @@ export default function RootLayout({
       <body className="antialiased" style={{ fontFamily: "var(--font-body)" }}>
         <CopilotKit
           runtimeUrl="/api/copilotkit"
-          agent="sample_agent"
+          agent="article_agent"
           showDevConsole={false}
         >
           {children}

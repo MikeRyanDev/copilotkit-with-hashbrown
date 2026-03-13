@@ -11,6 +11,7 @@ export default function CopilotKitPage() {
   const chatKit = useChatKit();
 
   useAgentContext({
+    agentId: "article_agent",
     description: "output_schema",
     value: s.toJsonSchema(chatKit.schema),
   });
@@ -33,14 +34,14 @@ export default function CopilotKitPage() {
         } as CopilotKitCSSProperties
       }
     >
-      <AppHeader active="chat" title="Weather Assistant" />
+      <AppHeader active="chat" title="Fast-Food Research Lab" />
       <div className="mx-auto flex min-h-0 h-full w-full max-w-[900px] flex-col">
         <CopilotChat
           disableSystemMessage={true}
           RenderMessage={CustomMessageRenderer}
           className="chat-page min-h-0 h-full w-full flex-1 overflow-hidden"
           labels={{
-            title: "Popup Assistant",
+            title: "Hashbrown Article Studio",
           }}
         />
       </div>

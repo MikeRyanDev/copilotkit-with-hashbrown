@@ -1,77 +1,92 @@
 import { s, prompt } from "@hashbrownai/core";
 import { exposeComponent, exposeMarkdown, useUiKit } from "@hashbrownai/react";
-import { WeatherCard } from "../weather";
-import { Squircle } from "../squircle";
-
-function WeatherCardFallback() {
-  return (
-    <Squircle
-      squircle="30"
-      className="mb-4 mt-6 w-full max-w-md bg-[var(--sky-blue)]/35 shadow-[0_16px_35px_-20px_rgba(94,92,90,0.35)]"
-      borderWidth={2}
-      borderColor="rgba(255, 255, 255, 0.55)"
-    >
-      <div className="weather-card-fallback relative h-full w-full overflow-hidden bg-white/28 p-5">
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="weather-card-fallback-block h-7 w-40 rounded bg-white/45" />
-            <div className="weather-card-fallback-block h-5 w-28 rounded bg-white/35" />
-          </div>
-          <div className="weather-card-fallback-block h-14 w-14 rounded-full bg-white/35" />
-        </div>
-
-        <div className="mt-4 flex items-end justify-between">
-          <div className="weather-card-fallback-block h-10 w-16 rounded bg-white/45" />
-          <div className="weather-card-fallback-block h-5 w-20 rounded bg-white/35" />
-        </div>
-
-        <div className="mt-4 border-t border-white/50 pt-4">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="space-y-2">
-              <div className="weather-card-fallback-block mx-auto h-3 w-12 rounded bg-white/30" />
-              <div className="weather-card-fallback-block mx-auto h-5 w-10 rounded bg-white/45" />
-            </div>
-            <div className="space-y-2">
-              <div className="weather-card-fallback-block mx-auto h-3 w-10 rounded bg-white/30" />
-              <div className="weather-card-fallback-block mx-auto h-5 w-10 rounded bg-white/45" />
-            </div>
-            <div className="space-y-2">
-              <div className="weather-card-fallback-block mx-auto h-3 w-12 rounded bg-white/30" />
-              <div className="weather-card-fallback-block mx-auto h-5 w-10 rounded bg-white/45" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </Squircle>
-  );
-}
+import { chartInputSchema } from "@/lib/chart-agent";
+import { ExecutiveSummary } from "./executive-summary";
+import { HorizontalRule } from "./horizontal-rule";
+import { Heading } from "./heading";
+import { CitationBlock } from "./citation-block";
+import { Chart } from "./chart";
+import { ChartGhostLoader } from "./chart-ghost-loader";
+import { markdownRendererProps } from "./markdown-renderer";
 
 export function useChatKit() {
   return useUiKit({
-    examples: prompt`
-      # Mixing Weather Cards and Markdown:
-      <ui>
-        <Markdown children="Here's the weather in Huntsville..."/>
-        <weather themeColor="blue" location="Huntsville, Al" temperature="0" humidity="0" windSpeed="0" feelsLike="0" />
-        <Markdown children="Here's the weather in Chicago..."/>
-        <weather themeColor="orange" location="Chicago, IL" temperature="0" humidity="0" windSpeed="0" feelsLike="0" />
-      </ui>
+    //     examples: prompt`
+    //       # Fast-Food Article
+    //       <ui>
+    //         <h level=${1} text="Chicken sandwiches that over-deliver on protein" />
+    //         <executive-summary text="Chick-fil-A, Subway, and Arby's all have high-protein sandwiches, but the sodium trade-offs vary sharply." />
+    //         <hr />
+    //         <markdown children=${`
+    // Compare standout menu items and cite the source URLs inline.[^1]
 
-      Hint: use a variety of theme colors based on the temperature.
-    `,
+    // [^1]: Example Source https://example.com
+    //         `} />
+    //         <chart chart=${{
+    //           prompt: "Compare protein and sodium for chicken sandwiches",
+    //           chartType: "scatter",
+    //           restaurants: ["Chick-fil-A", "Subway", "Arby's"],
+    //           menuItems: [],
+    //           categories: ["Chicken"],
+    //           searchTerm: "chicken sandwich",
+    //           maxCalories: 900,
+    //           minCalories: null,
+    //           minProtein: 20,
+    //           maxSodium: null,
+    //           limit: 8,
+    //           sortBy: "protein",
+    //           sortDirection: "desc",
+    //         }} />
+    //       </ui>
+    //     `,
     components: [
-      exposeMarkdown(),
-      exposeComponent(WeatherCard, {
-        name: "weather",
-        description: "Shows the weather for a given location",
-        fallback: () => <WeatherCardFallback />,
+      exposeComponent(ExecutiveSummary, {
+        name: "executive-summary",
+        description:
+          "Present a concise executive summary at the top of the article.",
         props: {
-          themeColor: s.string("The theme to use for the weather card"),
-          location: s.streaming.string("The location to get the weather for"),
-          temperature: s.number("The temperature in Fahrenheit"),
-          humidity: s.number("The humidity in percentage"),
-          windSpeed: s.number("The wind speed in miles per hour"),
-          feelsLike: s.number("The feels like temperature in Fahrenheit"),
+          text: s.streaming.string("The summary text stitched from the data"),
+        },
+      }),
+      exposeComponent(HorizontalRule, {
+        name: "hr",
+        description: "Show a horizontal rule to separate sections.",
+      }),
+      exposeMarkdown({
+        name: "markdown",
+        citations: true,
+        description: `
+          Render markdown with links, emphasis, lists, and citation definitions.
+          Define citations with [^source-id]: Source title https://example.com
+        `,
+        ...markdownRendererProps,
+      }),
+      exposeComponent(Heading, {
+        name: "h",
+        description:
+          "Show a heading to separate sections with configurable level.",
+        props: {
+          text: s.streaming.string("The text to show in the heading"),
+          level: s.number("Heading level from 1 to 6"),
+        },
+      }),
+      exposeComponent(CitationBlock, {
+        name: "blockquote",
+        description: "Highlight a supporting quote or citation.",
+        props: {
+          text: s.streaming.string("The quoted text to display"),
+          source: s.streaming.string("Optional source or attribution"),
+        },
+      }),
+      exposeComponent(Chart, {
+        name: "chart",
+        description: `
+          Visualize insights from the fast-food nutrition dataset. Supports bar,
+          line, pie, doughnut, and scatter charts with configurable filters.
+        `,
+        fallback: ChartGhostLoader,
+        props: {
+          chart: chartInputSchema,
         },
       }),
     ],
