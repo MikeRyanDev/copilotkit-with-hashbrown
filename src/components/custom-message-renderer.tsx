@@ -1,5 +1,4 @@
 import type { RenderMessageProps } from "@copilotkit/react-ui";
-import type { AssistantMessage } from "@ag-ui/core";
 import { useChatKit } from "./chat/chat-kit";
 import { useJsonParser } from "@hashbrownai/react";
 import { memo } from "react";
@@ -74,12 +73,12 @@ function getToolStatusText(message: RenderMessageProps["message"]): string {
 }
 
 const AssistantMessageRenderer = memo(function AssistantMessageRenderer({
-  message,
+  content,
 }: {
-  message: AssistantMessage;
+  content: string;
 }) {
   const kit = useChatKit();
-  const { value } = useJsonParser(message.content ?? "", kit.schema);
+  const { value } = useJsonParser(content, kit.schema);
 
   if (!value) return null;
 
@@ -94,7 +93,7 @@ const AssistantMessageRenderer = memo(function AssistantMessageRenderer({
 
 export function CustomMessageRenderer({ message }: RenderMessageProps) {
   if (message.role === "assistant") {
-    return <AssistantMessageRenderer message={message} />;
+    return <AssistantMessageRenderer content={message?.content ?? ""} />;
   }
   if (message.role === "tool") {
     return (

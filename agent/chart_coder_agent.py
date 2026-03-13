@@ -6,7 +6,7 @@ from shared import AgentContext, AgentState, default_middleware
 
 
 graph = create_agent(
-    model="openai:gpt-5.4",
+    model="openai:gpt-5-chat-latest",
     tools=[],
     middleware=default_middleware(),
     context_schema=AgentContext,

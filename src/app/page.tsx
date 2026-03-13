@@ -34,7 +34,7 @@ export default function CopilotKitPage() {
         } as CopilotKitCSSProperties
       }
     >
-      <AppHeader active="chat" title="Fast-Food Research Lab" />
+      <AppHeader active="chat" title="Fast-Food Nutrition Assistant" />
       <div className="mx-auto flex min-h-0 h-full w-full max-w-[900px] flex-col">
         <CopilotChat
           disableSystemMessage={true}

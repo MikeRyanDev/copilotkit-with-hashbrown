@@ -27,6 +27,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react18-json-view": "^0.2.9",
+    "rxjs": "7.8.1",
     "streamdown": "^2.1.0",
     "zod": "^4.3.6"
   },
@@ -45,6 +46,7 @@
   },
   "pnpm": {
     "overrides": {
+      "rxjs": "7.8.1",
       "@copilotkit/react-core": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/react-core@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
       "@copilotkit/runtime-client-gql": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/runtime-client-gql@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",
       "@copilotkit/shared": "https://pkg.pr.new/CopilotKit/CopilotKit/@copilotkit/shared@bb80d3b48b42e6cc2b2dc92c3baa037d93dfc893",

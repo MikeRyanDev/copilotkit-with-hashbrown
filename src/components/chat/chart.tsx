@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAgent, useAgentContext } from "@copilotkit/react-core/v2";
-import { HttpAgent, randomUUID } from "@ag-ui/client";
+import { randomUUID, defaultApplyEvents, RunAgentInput } from "@ag-ui/client";
 import type { ChartConfiguration } from "chart.js";
 import { Chart as ChartJS } from "chart.js/auto";
 import { s } from "@hashbrownai/core";
@@ -21,6 +21,7 @@ import {
 import { queryFastFoodItems, type FastFoodQueryOptions } from "@/lib/fast-food";
 import { Squircle } from "../squircle";
 import { useCopilotKit } from "@copilotkit/react-core/v2";
+import { filter, map, tap } from "rxjs";
 
 type ChartInputConfig = s.Infer<typeof chartInputSchema>;
 type RuntimeChartConfig = s.Infer<typeof chartSchema>;
@@ -90,49 +91,45 @@ export function Chart({ chart }: { chart: ChartInputConfig }) {
       return;
     }
 
-    let isCancelled = false;
+    const input: RunAgentInput = {
+      context: [
+        {
+          description: "output_schema",
+          value: JSON.stringify(s.toJsonSchema(chartAgentResultSchema)),
+        },
+      ],
+      messages: [
+        {
+          id: randomUUID(),
+          role: "user",
+          content: [
+            "Runtime functions:",
+            runtime.describe(),
+            "",
+            "Chart request JSON:",
+            JSON.stringify(request, null, 2),
+          ].join("\n"),
+        },
+      ],
+      threadId: randomUUID(),
+      runId: randomUUID(),
+      tools: [],
+    };
 
-    const userMessage = [
-      "Runtime functions:",
-      runtime.describe(),
-      "",
-      "Chart request JSON:",
-      JSON.stringify(request, null, 2),
-    ].join("\n");
-
-    const thisAgent = agent.clone();
-
-    thisAgent.setMessages([
-      {
-        id: randomUUID(),
-        role: "user",
-        content: userMessage,
-      },
-    ]);
-
-    copilotkit
-      .runAgent({ agent: thisAgent })
-      .then((result) => {
-        console.log("result", result);
-        if (isCancelled) {
-          return;
-        }
-
-        const lastAssistantMessage = result.newMessages.findLast(
-          (message) => message.role === "assistant",
-        );
-
-        if (
-          lastAssistantMessage &&
-          typeof lastAssistantMessage.content === "string"
-        ) {
-          setAgentResponse(lastAssistantMessage.content);
-        }
-      })
-      .catch(console.error);
+    const subscription = defaultApplyEvents(input, agent.run(input), agent, [])
+      .pipe(
+        map((result) => {
+          return result.messages?.find(
+            (message) => message.role === "assistant",
+          )?.content;
+        }),
+        filter((content): content is string => !!content),
+        tap((result) => setAgentResponse(result)),
+      )
+      .subscribe();
 
     return () => {
-      isCancelled = true;
+      subscription.unsubscribe();
     };
   }, [agent, chart, runtime, copilotkit]);
 
@@ -151,7 +148,6 @@ export function Chart({ chart }: { chart: ChartInputConfig }) {
         if (result?.error) {
           setRuntimeError(String(result.error));
         } else {
-          setRuntimeChart(result);
           console.log("result", result);
         }
       })
@@ -161,6 +157,14 @@ export function Chart({ chart }: { chart: ChartInputConfig }) {
 
     return () => controller.abort();
   }, [generatedCode, runtime]);
+
+  useEffect(() => {
+    if (!runtimeError) {
+      return;
+    }
+
+    console.error("runtimeError", runtimeError);
+  }, [runtimeError]);
 
   useEffect(() => {
     if (!canvasRef.current || !runtimeChart) {
@@ -184,22 +188,9 @@ export function Chart({ chart }: { chart: ChartInputConfig }) {
 
   return (
     <section className="my-5 w-full max-w-[960px]">
-      <Squircle
-        squircle="32"
-        borderWidth={1}
-        borderColor="rgba(119, 70, 37, 0.16)"
-        className="overflow-hidden bg-white/82 shadow-[0_24px_44px_-34px_rgba(119,70,37,0.48)]"
-      >
-        <div className="relative p-5">
-          <canvas ref={canvasRef} className="min-h-[320px] w-full" />
-
-          {generatedCode && !runtimeChart ? (
-            <pre className="absolute inset-x-5 bottom-5 max-h-40 overflow-auto rounded-2xl bg-[var(--gray-dark)]/95 p-4 text-xs leading-5 text-white/88">
-              {generatedCode}
-            </pre>
-          ) : null}
-        </div>
-      </Squircle>
+      <div className="relative p-5">
+        <canvas ref={canvasRef} className="min-h-[320px] w-full" />
+      </div>
     </section>
   );
 }
