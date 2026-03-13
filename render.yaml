@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: cpk-hb-ui
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    repo: https://github.com/mikeryandev/copilotkit-with-hashbrown
+    rootDir: .
+    buildCommand: pnpm install --frozen-lockfile --ignore-scripts && pnpm run build
+    startCommand: sh -c 'export LANGGRAPH_DEPLOYMENT_URL="http://$LANGGRAPH_HOSTPORT" && pnpm start'
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LANGGRAPH_HOSTPORT
+        fromService:
+          name: cpk-hb-agent
+          type: pserv
+          property: hostport
+      - key: LANGSMITH_API_KEY
+        sync: false
+
+  - type: pserv
+    name: cpk-hb-agent
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    repo: https://github.com/mikeryandev/copilotkit-with-hashbrown
+    rootDir: agent
+    buildCommand: pip install uv && uv sync --frozen --python 3.12
+    startCommand: uv run langgraph dev --host 0.0.0.0 --port $PORT --no-browser --no-reload
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
